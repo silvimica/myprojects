@@ -1,55 +1,52 @@
-library("MASS")
+library(MASS)
 library(fitdistrplus)
 
-
-real_distr <- c()
-result<-c()
-
-fun_chi_square <- function(alpha1,alpha2, alpha3, beta,n,  weight1, weight2, weight3) 
-{
-  for (x in 1:1000) {   
-    
-    n<-n
-    alpha<- alpha1 
-    alpha1<-alpha2
-    alpha2<- alpha3
-    beta<-beta
-    weight1<-weight1
-    weight2<-weight2
-    weight3<-weight3
-    z_theor<- c(rgamma(round(weight1 *n, digits = 0), alpha, beta), rgamma(round(weight2 *n, digits = 0), alpha2, beta), rgamma(round(weight3 *n, digits = 0), alpha1, beta))              #rweibull(n, alpha, beta)        #rlnorm(n, alpha, beta)
-    parameters<-fitdist(z_theor, distr = "gamma", method = "mle", lower = c(0, 0), start = list(scale = 1, shape = 1))
-    alpha_t = unname(parameters$estimate["shape"])
-    
-    beta_t =unname(parameters$estimate["scale"])
-    theor_max <-qgamma(0.99, alpha_t, beta_t)
-    theor_min <- qgamma(0.01, alpha_t, beta_t)
-    tiers <- array()
-    for (x in 1:10)
-    {tiers[x] =  x *(theor_max)/10 }
-    observed_counts <- c()
-    expected_counts <-c()
-    observed_counts[1]=sum(z_theor< tiers[1])
-    expected_counts[1]=round(pgamma(tiers[1], alpha_t, beta_t)*n)
-    
-    for(x in 2:10) {
-      observed_counts[x] <- sum(z_theor< tiers[x]) - sum(z_theor< tiers[x-1])
-      expected_counts[x] <-round(pgamma(tiers[x], alpha, beta)*n - pgamma(tiers[x-1], alpha, beta)*n, digits=0) 
+simulate_chi_square <- function(dist_type, alpha1, alpha2, alpha3, beta, n, weight1, weight2, weight3) {
+  results <- numeric(1000)
+  
+  for (i in 1:1000) {
+    if (dist_type == "gamma_mixture") {
+      # Generate data from a mixture of Gamma distributions
+      sample_sizes <- round(n * c(weight1, weight2, weight3))
+      samples <- c(rgamma(sample_sizes[1], alpha1, beta),
+                   rgamma(sample_sizes[2], alpha2, beta),
+                   rgamma(sample_sizes[3], alpha3, beta))
+    } else {
+      # Generate data from a single distribution type
+      samples <- switch(dist_type,
+                        "gamma" = rgamma(n, alpha1, beta),
+                        "weibull" = rweibull(n, alpha1, beta),
+                        "lognormal" = rlnorm(n, alpha1, beta),
+                        stop("Unsupported distribution type"))
     }
     
-    chi_sq <-sum((observed_counts-expected_counts)^2/expected_counts)
-    chi_sq_theor<-qchisq(p=.05, df=length(observed_counts)-1, lower.tail=FALSE)
+    # Fit a gamma distribution to the generated data
+    fit <- fitdist(samples, distr = "gamma", method = "mle", lower = c(0, 0), start = list(scale = 1, shape = 1))
+    est_shape <- fit$estimate["shape"]
+    est_scale <- fit$estimate["scale"]
+    
+    # Calculate Chi-square statistic
+    hist_info <- hist(samples, breaks = "FD", plot = FALSE)
+    observed <- hist_info$counts
+    breaks <- hist_info$breaks
+    midpoints <- (breaks[-length(breaks)] + breaks[-1]) / 2
+    expected <- dgamma(midpoints, est_shape, est_scale) * length(samples) * diff(breaks)
 
-    if(!is.na(chi_sq)) { 
-      real_distr=append(real_distr, TRUE)
-      if (chi_sq < chi_sq_theor) {result=append(result, FALSE)  
-      } else {
-        result=append(result, TRUE)}}
+    chi_sq <- sum((observed - expected)^2 / expected)
+    results[i] <- ifelse(chi_sq > qchisq(0.95, df = length(observed) - 1), 1, 0)
   }
-  power <- sum(result)/sum(real_distr)
-  return(pr)
   
+  return(sum(results) / length(results))  # Returning the power of the test
 }
 
-power <-fun_chi_square(1,2,3,1, 500, 0.9, 0.05,0.05)
-power
+# Example usage
+power_gamma_mixture <- simulate_chi_square("gamma_mixture", 1, 2, 3, 1, 500, 0.4, 0.3, 0.3)
+power_gamma <- simulate_chi_square("gamma", 2, NA, NA, 1, 500, NA, NA, NA)
+power_weibull <- simulate_chi_square("weibull", 2, NA, NA, 1, 500, NA, NA, NA)
+power_lognormal <- simulate_chi_square("lognormal", 0, NA, NA, 1, 500, NA, NA, NA)
+
+print(power_gamma_mixture)
+print(power_gamma)
+print(power_weibull)
+print(power_lognormal)
+
