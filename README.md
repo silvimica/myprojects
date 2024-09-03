@@ -7,6 +7,8 @@ This repository contains a collection of my data science-related projects. Below
 - [Mixture Gamma Distribution](#2-mixture-gamma-distribution)
 - [Time Series Forecasting](#3-time-series-forecasting)
 - [Airflow DAG generator](#4-airflow-dag-generation)
+- [PlayMarket Review Scrapper](#5-review-web-scrapper)
+
 
 
 ## Projects
@@ -26,3 +28,7 @@ This project involves developing models to forecast future values based on previ
 ### 4. [Airflow DAG generator](https://github.com/silvimica/myprojects/tree/main/airflow_dag_generator)
 
 This project automates the creation of basic Apache Airflow DAGs using configuration details from an Excel file, leveraging Jinja2 templates to dynamically generate DAG files for task orchestration.
+
+### 5. [PlayMarket Review Scrapper](https://github.com/silvimica/myprojects/tree/main/scrapper_web_app)
+
+A web-based Flask application that scrapes user reviews from any Google Play app using its URL. It displays the reviews in a table format and provides an option to download them as a CSV file for further analysis.
