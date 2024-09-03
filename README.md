@@ -1,6 +1,6 @@
 ## Overview
 
-This repository contains a collection of my data science-related projects. Below are brief descriptions of each key project featured in this repository.
+This repository contains a collection of my data science and engineering projects. Below are brief descriptions of each key project featured in this repository.
 
 ## Contents
 - [Binomial Sentiment Classification Model](#1-binomial-sentiment-classification-model)
