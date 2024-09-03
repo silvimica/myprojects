@@ -4,7 +4,7 @@
 ## Overview
 This project focuses on classifying user comments on the eGov mobile app into positive or negative sentiments. We utilize a Naive Bayes classifier due to its effectiveness in handling text classification tasks. This model helps in understanding user sentiment which can be crucial for continuous improvement of the app.
 
-![eGov Mobile App](./images/egov_app.png)  <!-- Replace 'image_link_here' with the actual link to the image -->
+![eGov Mobile App](./images/egov_app.png)  
 
 ## Dataset
 The model is trained using a labeled dataset consisting of user comments categorized into two types:
