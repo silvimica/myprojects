@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Play Review Scraper</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Google Play Review Scraper</h1>
+        <form method="POST">
+            <label for="app_url">Google Play App URL:</label>
+            <input type="text" id="app_url" name="app_url" placeholder="Enter Google Play URL" required>
+            <button type="submit">Scrape Reviews</button>
+        </form>
+        {% if reviews is not none %}
+        <h2>Reviews</h2>
+        <form method="GET" action="/download">
+            <button type="submit">Download CSV</button>
+        </form>
+        <table>
+            <tr>
+                <th>Reviewer Name</th>
+                <th>Rating</th>
+                <th>Review</th>
+            </tr>
+            {% for index, row in reviews.iterrows() %}
+            <tr>
+                <td>{{ row['userName'] }}</td>
+                <td>{{ row['score'] }}</td>
+                <td class="review-content">{{ row['content'] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+</body>
+</html>
+
