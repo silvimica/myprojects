@@ -6,6 +6,8 @@ This repository contains a collection of my data science-related projects. Below
 - [Binomial Sentiment Classification Model](#1-binomial-sentiment-classification-model)
 - [Mixture Gamma Distribution](#2-mixture-gamma-distribution)
 - [Time Series Forecasting](#3-time-series-forecasting)
+- [Airflow DAG generator](#4-airflow-dag-generation)
+
 
 ## Projects
 
@@ -17,7 +19,6 @@ This project focuses on classifying user comments left for the EGOV mobile app i
 
 As part of a research project, this code explores the performance of the Chi-Square goodness of fit test for a mixture of gamma distributions with varying parameters and proportions. The aim is to evaluate how well the Chi-Square test can detect deviations from the expected distribution when dealing with complex mixtures.
 
-### 3. [Time Series Forecasting](https://github.com/silvimica/myprojects/tree/main/time_series_forecasting)
+### 4. [Airflow DAG generator](https://github.com/silvimica/myprojects/tree/main/airflow_dag_generator)
 
-This project involves developing models to forecast future values based on previously observed values in time series data. I use various techniques such as ARIMA, LSTM networks, and other machine learning approaches tailored to handle the sequential nature of time data. The goal is to provide accurate and actionable forecasts that can be used in decision-making processes.
-
+This project automates the creation of basic Apache Airflow DAGs using configuration details from an Excel file, leveraging Jinja2 templates to dynamically generate DAG files for task orchestration.
